@@ -1,7 +1,26 @@
 {
     "name": "boxspaced/cms-core-module",
     "require": {
-
+        "boxspaced/entity-manager-module": "dev-master",
+        "brandonwamboldt/utilphp": "^1.1",
+        "zendframework/zend-authentication": "^2.5",
+        "zendframework/zend-mvc": "^3.0",
+        "zendframework/zend-mvc-form": "^1.0",
+        "zendframework/zend-inputfilter": "^2.7",
+        "zendframework/zend-mvc-plugin-flashmessenger": "^1.0",
+        "zendframework/zend-cache": "^2.7",
+        "zendframework/zend-log": "^2.9",
+        "zendframework/zend-session": "^2.7",
+        "zendframework/zend-mail": "^2.7",
+        "zendframework/zend-serializer": "^2.8",
+        "zendframework/zend-filter": "^2.7",
+        "zendframework/zend-math": "^3.0",
+        "zendframework/zend-paginator": "^2.7",
+        "zendframework/zendframework1": "^1.12"
+    },
+    "require-dev": {
+        "zendframework/zend-component-installer": "^0.3.1",
+        "zfcampus/zf-development-mode": "^3.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -13,5 +32,16 @@
     "config": {
         "bin-dir": "bin/",
         "process-timeout": 1200
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/boxspaced/entity-manager-module"
+        }
+    ],
+    "scripts": {
+        "development-disable": "zf-development-mode disable",
+        "development-enable": "zf-development-mode enable",
+        "development-status": "zf-development-mode status"
     }
 }
