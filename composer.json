@@ -37,6 +37,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/boxspaced/entity-manager-module"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/boxspaced/entity-manager"
         }
     ],
     "scripts": {
