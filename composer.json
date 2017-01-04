@@ -19,10 +19,6 @@
         "zendframework/zend-paginator": "^2.7",
         "zendframework/zendframework1": "^1.12"
     },
-    "require-dev": {
-        "zendframework/zend-component-installer": "^0.3.1",
-        "zfcampus/zf-development-mode": "^3.0"
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
