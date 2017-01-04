@@ -4,6 +4,7 @@
         "boxspaced/entity-manager-module": "dev-master",
         "brandonwamboldt/utilphp": "^1.1",
         "zendframework/zend-authentication": "^2.5",
+        "zendframework/zend-permissions-acl": "^2.6",
         "zendframework/zend-mvc": "^3.0",
         "zendframework/zend-mvc-form": "^1.0",
         "zendframework/zend-inputfilter": "^2.7",
