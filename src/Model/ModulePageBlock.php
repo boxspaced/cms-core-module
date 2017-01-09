@@ -29,7 +29,7 @@ class ModulePageBlock extends AbstractEntity
      */
     public function getParentModulePage()
     {
-        return $this->get('parentModulePage');
+        return $this->get('parent_module_page');
     }
 
     /**
@@ -38,7 +38,7 @@ class ModulePageBlock extends AbstractEntity
      */
     public function setParentModulePage(ModulePage $parentModulePage)
     {
-        $this->set('parentModulePage', $parentModulePage);
+        $this->set('parent_module_page', $parentModulePage);
 		return $this;
     }
 
@@ -65,7 +65,7 @@ class ModulePageBlock extends AbstractEntity
      */
     public function getAdminLabel()
     {
-        return $this->get('adminLabel');
+        return $this->get('admin_label');
     }
 
     /**
@@ -74,7 +74,7 @@ class ModulePageBlock extends AbstractEntity
      */
     public function setAdminLabel($adminLabel)
     {
-        $this->set('adminLabel', $adminLabel);
+        $this->set('admin_label', $adminLabel);
 		return $this;
     }
 

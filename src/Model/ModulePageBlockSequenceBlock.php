@@ -30,7 +30,7 @@ class ModulePageBlockSequenceBlock extends AbstractEntity
      */
     public function getParentBlockSequence()
     {
-        return $this->get('parentBlockSequence');
+        return $this->get('parent_block_sequence');
     }
 
     /**
@@ -39,7 +39,7 @@ class ModulePageBlockSequenceBlock extends AbstractEntity
      */
     public function setParentBlockSequence(ModulePageBlockSequence $parentBlockSequence)
     {
-        $this->set('parentBlockSequence', $parentBlockSequence);
+        $this->set('parent_block_sequence', $parentBlockSequence);
 		return $this;
     }
 
@@ -66,7 +66,7 @@ class ModulePageBlockSequenceBlock extends AbstractEntity
      */
     public function getOrderBy()
     {
-        return $this->get('orderBy');
+        return $this->get('order_by');
     }
 
     /**
@@ -75,7 +75,7 @@ class ModulePageBlockSequenceBlock extends AbstractEntity
      */
     public function setOrderBy($orderBy)
     {
-        $this->set('orderBy', $orderBy);
+        $this->set('order_by', $orderBy);
 		return $this;
     }
 

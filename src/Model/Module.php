@@ -69,7 +69,7 @@ class Module extends AbstractEntity
      */
     public function getRouteController()
     {
-        return $this->get('routeController');
+        return $this->get('route_controller');
     }
 
     /**
@@ -78,7 +78,7 @@ class Module extends AbstractEntity
      */
     public function setRouteController($routeController)
     {
-        $this->set('routeController', $routeController);
+        $this->set('route_controller', $routeController);
 		return $this;
     }
 
@@ -87,7 +87,7 @@ class Module extends AbstractEntity
      */
     public function getRouteAction()
     {
-        return $this->get('routeAction');
+        return $this->get('route_action');
     }
 
     /**
@@ -96,7 +96,7 @@ class Module extends AbstractEntity
      */
     public function setRouteAction($routeAction)
     {
-        $this->set('routeAction', $routeAction);
+        $this->set('route_action', $routeAction);
 		return $this;
     }
 

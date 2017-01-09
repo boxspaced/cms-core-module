@@ -47,7 +47,7 @@ class ProvisionalLocation extends AbstractEntity
      */
     public function getBeneathMenuItemId()
     {
-        return $this->get('beneathMenuItemId');
+        return $this->get('beneath_menu_item_id');
     }
 
     /**
@@ -56,7 +56,7 @@ class ProvisionalLocation extends AbstractEntity
      */
     public function setBeneathMenuItemId($beneathMenuItemId)
     {
-        $this->set('beneathMenuItemId', $beneathMenuItemId);
+        $this->set('beneath_menu_item_id', $beneathMenuItemId);
 		return $this;
     }
 

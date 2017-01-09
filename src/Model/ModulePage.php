@@ -30,7 +30,7 @@ class ModulePage extends AbstractEntity
      */
     public function getParentModule()
     {
-        return $this->get('parentModule');
+        return $this->get('parent_module');
     }
 
     /**
@@ -39,7 +39,7 @@ class ModulePage extends AbstractEntity
      */
     public function setParentModule(Module $parentModule)
     {
-        $this->set('parentModule', $parentModule);
+        $this->set('parent_module', $parentModule);
 		return $this;
     }
 
@@ -66,7 +66,7 @@ class ModulePage extends AbstractEntity
      */
     public function getFreeBlocks()
     {
-        return $this->get('freeBlocks');
+        return $this->get('free_blocks');
     }
 
     /**
@@ -106,7 +106,7 @@ class ModulePage extends AbstractEntity
      */
     public function getBlockSequences()
     {
-        return $this->get('blockSequences');
+        return $this->get('block_sequences');
     }
 
     /**

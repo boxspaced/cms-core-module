@@ -2,7 +2,7 @@
 namespace Core;
 
 use Boxspaced\EntityManager\Entity\AbstractEntity;
-use Boxspaced\EntityManager\Mapper\Conditions\Conditions;
+use Boxspaced\EntityManager\Mapper\Conditions;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Slug\Model\Route;
 use Block\Model\Block;
@@ -105,7 +105,7 @@ return [
                         'to' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
-                        'beneathMenuItemId' => [
+                        'beneath_menu_item_id' => [
                             'type' => AbstractEntity::TYPE_INT,
                         ],
                     ],
@@ -128,14 +128,14 @@ return [
                         'enabled' => [
                             'type' => AbstractEntity::TYPE_BOOL,
                         ],
-                        'routeController' => [
+                        'route_controller' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
-                        'routeAction' => [
+                        'route_action' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
                     ],
-                    'children' => [
+                    'one_to_many' => [
                         'routes' => [
                             'type' => Route::class,
                             'conditions' => function ($id) {
@@ -147,7 +147,7 @@ return [
                             'type' => Model\ModulePage::class,
                             'conditions' => function ($id) {
                                 return (new Conditions())
-                                        ->field('parentModule.id')->eq($id);
+                                        ->field('parent_module.id')->eq($id);
                             },
                         ],
                     ],
@@ -158,7 +158,7 @@ return [
                     'params' => [
                         'table' => 'module_page',
                         'columns' => [
-                            'parentModule' => 'module_id',
+                            'parent_module' => 'module_id',
                         ],
                     ],
                 ],
@@ -170,30 +170,30 @@ return [
                         'name' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
-                        'parentModule' => [
+                        'parent_module' => [
                             'type' => Model\Module::class,
                         ],
                     ],
-                    'children' => [
-                        'freeBlocks' => [
+                    'one_to_many' => [
+                        'free_blocks' => [
                             'type' => Model\ModulePageFreeBlock::class,
                             'conditions' => function ($id) {
                                 return (new Conditions())
-                                        ->field('parentModulePage.id')->eq($id);
+                                        ->field('parent_module_page.id')->eq($id);
                             },
                         ],
-                        'blockSequences' => [
+                        'block_sequences' => [
                             'type' => Model\ModulePageBlockSequence::class,
                             'conditions' => function ($id) {
                                 return (new Conditions())
-                                        ->field('parentModulePage.id')->eq($id);
+                                        ->field('parent_module_page.id')->eq($id);
                             },
                         ],
                         'blocks' => [
                             'type' => Model\ModulePageBlock::class,
                             'conditions' => function ($id) {
                                 return (new Conditions())
-                                        ->field('parentModulePage.id')->eq($id);
+                                        ->field('parent_module_page.id')->eq($id);
                             },
                         ],
                     ],
@@ -204,7 +204,7 @@ return [
                     'params' => [
                         'table' => 'module_page_block',
                         'columns' => [
-                            'parentModulePage' => 'module_page_id',
+                            'parent_module_page' => 'module_page_id',
                         ],
                     ],
                 ],
@@ -216,13 +216,13 @@ return [
                         'name' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
-                        'adminLabel' => [
+                        'admin_label' => [
                             'type' => AbstractEntity::TYPE_STRING,
                         ],
                         'sequence' => [
                             'type' => AbstractEntity::TYPE_BOOL,
                         ],
-                        'parentModulePage' => [
+                        'parent_module_page' => [
                             'type' => Model\ModulePage::class,
                         ],
                     ],
@@ -233,8 +233,8 @@ return [
                     'params' => [
                         'table' => 'module_page_free_block',
                         'columns' => [
-                            'parentModulePage' => 'module_page_id',
-                            'modulePageBlock' => 'module_page_block_id',
+                            'parent_module_page' => 'module_page_id',
+                            'module_page_block' => 'module_page_block_id',
                             'block' => 'block_id',
                         ],
                     ],
@@ -244,10 +244,10 @@ return [
                         'id' => [
                             'type' => AbstractEntity::TYPE_INT,
                         ],
-                        'parentModulePage' => [
+                        'parent_module_page' => [
                             'type' => Model\ModulePage::class,
                         ],
-                        'modulePageBlock' => [
+                        'module_page_block' => [
                             'type' => Model\ModulePageBlock::class,
                         ],
                         'block' => [
@@ -261,8 +261,8 @@ return [
                     'params' => [
                         'table' => 'module_page_block_sequence',
                         'columns' => [
-                            'parentModulePage' => 'module_page_id',
-                            'modulePageBlock' => 'module_page_block_id',
+                            'parent_module_page' => 'module_page_id',
+                            'module_page_block' => 'module_page_block_id',
                         ],
                     ],
                 ],
@@ -271,20 +271,20 @@ return [
                         'id' => [
                             'type' => AbstractEntity::TYPE_INT,
                         ],
-                        'parentModulePage' => [
+                        'parent_module_page' => [
                             'type' => Model\ModulePage::class,
                         ],
-                        'modulePageBlock' => [
+                        'module_page_block' => [
                             'type' => Model\ModulePageBlock::class,
                         ],
                     ],
-                    'children' => [
+                    'one_to_many' => [
                         'blocks' => [
                             'type' => Model\ModulePageBlockSequenceBlock::class,
                             'conditions' => function ($id) {
                                 return (new Conditions())
-                                        ->field('parentBlockSequence.id')->eq($id)
-                                        ->order('orderBy', Conditions::ORDER_ASC);
+                                        ->field('parent_block_sequence.id')->eq($id)
+                                        ->order('order_by', Conditions::ORDER_ASC);
                             }
                         ],
                     ],
@@ -295,7 +295,7 @@ return [
                     'params' => [
                         'table' => 'module_page_block_sequence_block',
                         'columns' => [
-                            'parentBlockSequence' => 'block_sequence_id',
+                            'parent_block_sequence' => 'block_sequence_id',
                             'block' => 'block_id',
                         ],
                     ],
@@ -305,10 +305,10 @@ return [
                         'id' => [
                             'type' => AbstractEntity::TYPE_INT,
                         ],
-                        'orderBy' => [
+                        'order_by' => [
                             'type' => AbstractEntity::TYPE_INT,
                         ],
-                        'parentBlockSequence' => [
+                        'parent_block_sequence' => [
                             'type' => Model\ModulePageBlockSequence::class,
                         ],
                         'block' => [
