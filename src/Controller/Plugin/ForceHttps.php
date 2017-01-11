@@ -1,10 +1,10 @@
 <?php
-namespace Core\Controller\Plugin;
+namespace Boxspaced\CmsCoreModule\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Http\Response;
 use Zend\Uri\Http as HttpUri;
-use Core\Exception;
+use Boxspaced\CmsCoreModule\Exception;
 
 class ForceHttps extends AbstractPlugin
 {

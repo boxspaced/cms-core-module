@@ -1,9 +1,9 @@
 <?php
-namespace Core\Controller\Plugin;
+namespace Boxspaced\CmsCoreModule\Controller\Plugin;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
-use Account\Service\AccountService;
+use Boxspaced\CmsAccountModule\Service\AccountService;
 
 class ModulePageAdminWidgetFactory implements FactoryInterface
 {

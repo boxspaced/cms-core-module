@@ -1,8 +1,8 @@
 <?php
-namespace Core\Model;
+namespace Boxspaced\CmsCoreModule\Model;
 
 use Boxspaced\EntityManager\Entity\AbstractEntity;
-use Block\Model\Block;
+use Boxspaced\CmsBlockModule\Model\Block;
 
 class ModulePageBlockSequenceBlock extends AbstractEntity
 {

@@ -1,15 +1,15 @@
 <?php
-namespace Core\Service;
+namespace Boxspaced\CmsCoreModule\Service;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 use Zend\Log\Logger;
 use Zend\Authentication\AuthenticationService;
 use Boxspaced\EntityManager\EntityManager;
-use Core\Model;
-use Account\Model\UserRepository;
-use Block\Model\BlockRepository;
-use Core\Model\EntityFactory;
+use Boxspaced\CmsCoreModule\Model;
+use Boxspaced\CmsAccountModule\Model\UserRepository;
+use Boxspaced\CmsBlockModule\Model\BlockRepository;
+use Boxspaced\CmsCoreModule\Model\EntityFactory;
 
 class ModulePageServiceFactory implements FactoryInterface
 {

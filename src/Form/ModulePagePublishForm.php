@@ -1,10 +1,10 @@
 <?php
-namespace Core\Form;
+namespace Boxspaced\CmsCoreModule\Form;
 
 use Zend\Form\Form;
 use Zend\Form\Element;
-use Block\Service\BlockService;
-use Core\Service;
+use Boxspaced\CmsBlockModule\Service\BlockService;
+use Boxspaced\CmsCoreModule\Service;
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator;

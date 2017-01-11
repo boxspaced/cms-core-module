@@ -1,5 +1,5 @@
 <?php
-namespace Core\Controller;
+namespace Boxspaced\CmsCoreModule\Controller;
 
 use Interop\Container\ContainerInterface;
 use Zend\Http\Response;

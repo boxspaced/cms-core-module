@@ -1,5 +1,5 @@
 <?php
-namespace Core\Mail;
+namespace Boxspaced\CmsCoreModule\Mail;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;

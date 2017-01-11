@@ -1,5 +1,5 @@
 <?php
-namespace Core\Router;
+namespace Boxspaced\CmsCoreModule\Router;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;

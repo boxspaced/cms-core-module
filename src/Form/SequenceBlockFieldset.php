@@ -1,5 +1,5 @@
 <?php
-namespace Core\Form;
+namespace Boxspaced\CmsCoreModule\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;

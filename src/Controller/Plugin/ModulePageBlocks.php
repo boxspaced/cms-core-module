@@ -1,9 +1,9 @@
 <?php
-namespace Core\Controller\Plugin;
+namespace Boxspaced\CmsCoreModule\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ViewModel;
-use Core\Service;
+use Boxspaced\CmsCoreModule\Service;
 
 class ModulePageBlocks extends AbstractPlugin
 {

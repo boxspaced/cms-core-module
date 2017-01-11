@@ -1,9 +1,9 @@
 <?php
-namespace Core\Controller\Plugin;
+namespace Boxspaced\CmsCoreModule\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ViewModel;
-use Account\Service\AccountService;
+use Boxspaced\CmsAccountModule\Service\AccountService;
 
 class ModulePageAdminWidget extends AbstractPlugin
 {

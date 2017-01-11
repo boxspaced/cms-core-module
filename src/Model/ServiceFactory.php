@@ -1,5 +1,5 @@
 <?php
-namespace Core\Model;
+namespace Boxspaced\CmsCoreModule\Model;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;

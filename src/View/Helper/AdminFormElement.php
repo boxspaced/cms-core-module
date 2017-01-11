@@ -1,5 +1,5 @@
 <?php
-namespace Core\View\Helper;
+namespace Boxspaced\CmsCoreModule\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Zend\Filter\StaticFilter;

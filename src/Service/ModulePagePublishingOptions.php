@@ -1,5 +1,5 @@
 <?php
-namespace Core\Service;
+namespace Boxspaced\CmsCoreModule\Service;
 
 class ModulePagePublishingOptions
 {

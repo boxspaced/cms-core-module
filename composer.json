@@ -23,7 +23,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Core\\": "src/"
+            "Boxspaced\\CmsCoreModule\\": "src/"
         }
     },
     "config": {
@@ -47,7 +47,7 @@
     },
     "extra": {
         "zf": {
-            "module": "Core"
+            "module": "Boxspaced\\CmsCoreModule"
         }
     }
 }

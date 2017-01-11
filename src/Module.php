@@ -1,5 +1,5 @@
 <?php
-namespace Core;
+namespace Boxspaced\CmsCoreModule;
 
 use Zend\Mvc\MvcEvent;
 use Zend_Search_Lucene_Search_QueryParser as SearchQueryParser;

@@ -1,17 +1,17 @@
 <?php
-namespace Core\Service;
+namespace Boxspaced\CmsCoreModule\Service;
 
 use Zend\Cache\Storage\Adapter\AbstractAdapter as Cache;
 use Zend\Log\Logger;
 use Zend\Authentication\AuthenticationService;
 use Boxspaced\EntityManager\EntityManager;
-use Core\Model;
-use Core\Exception;
-use Account\Model\UserRepository;
-use Block\Model\BlockRepository;
-use Core\Model\EntityFactory;
-use Account\Model\User;
-use Versioning\Model\VersionableInterface;
+use Boxspaced\CmsCoreModule\Model;
+use Boxspaced\CmsCoreModule\Exception;
+use Boxspaced\CmsAccountModule\Model\UserRepository;
+use Boxspaced\CmsBlockModule\Model\BlockRepository;
+use Boxspaced\CmsCoreModule\Model\EntityFactory;
+use Boxspaced\CmsAccountModule\Model\User;
+use Boxspaced\CmsVersioningModule\Model\VersionableInterface;
 
 /**
  * @todo Rename as Module service and have module related operations

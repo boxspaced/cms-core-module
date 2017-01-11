@@ -1,12 +1,12 @@
 <?php
-namespace Core;
+namespace Boxspaced\CmsCoreModule;
 
 use Boxspaced\EntityManager\Entity\AbstractEntity;
 use Boxspaced\EntityManager\Mapper\Conditions;
 use Boxspaced\EntityManagerModule\Mapper\ConditionsFactory;
 use Zend\ServiceManager\Factory\InvokableFactory;
-use Slug\Model\Route;
-use Block\Model\Block;
+use Boxspaced\CmsSlugModule\Model\Route;
+use Boxspaced\CmsBlockModule\Model\Block;
 use Zend\Router\RoutePluginManager;
 use Zend\Mail\Transport\Smtp;
 use Zend\Session\Validator\RemoteAddr;
