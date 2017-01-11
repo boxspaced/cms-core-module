@@ -72,7 +72,7 @@ class AdminNavigationWidget extends AbstractPlugin
             'allowManageAssets' => $this->accountService->isAllowed('asset', 'index'),
         ]);
 
-        return $viewModel->setTemplate('core/partial/' . $partial . '.phtml');
+        return $viewModel->setTemplate('boxspaced/cms-core-module/partial/' . $partial . '.phtml');
     }
 
 }

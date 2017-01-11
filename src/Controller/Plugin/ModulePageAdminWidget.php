@@ -54,7 +54,7 @@ class ModulePageAdminWidget extends AbstractPlugin
             'allowPublish' => ($hasBlocks && $canPublish),
         ]);
 
-        return $viewModel->setTemplate('core/partial/module-page-admin-widget.phtml');
+        return $viewModel->setTemplate('boxspaced/cms-core-module/partial/module-page-admin-widget.phtml');
     }
 
 }
