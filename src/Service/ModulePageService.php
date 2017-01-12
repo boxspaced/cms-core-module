@@ -14,7 +14,7 @@ use Boxspaced\CmsAccountModule\Model\User;
 use Boxspaced\CmsVersioningModule\Model\VersionableInterface;
 
 /**
- * @todo Rename as Module service and have module related operations
+ * @todo rename as Module service and have module related operations
  */
 class ModulePageService
 {

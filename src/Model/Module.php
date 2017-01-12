@@ -8,7 +8,7 @@ use Boxspaced\CmsSlugModule\Model\Route;
 class Module extends AbstractEntity
 {
 
-    // @todo Name constants e.g. item, container, block, digital-gallery etc.
+    // @todo name constants e.g. item, container, block, digital-gallery etc.
 
     /**
      * @return int
