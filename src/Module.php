@@ -58,7 +58,10 @@ class Module
     public function error(MvcEvent $event)
     {
         $logger = $event->getApplication()->getServiceManager()->get(Logger::class);
-        $logger->err($event->getParam('exception'));
+
+        $exception = $event->getParam('exception');
+
+        $logger->err($exception ?: 'Error event caught but no exception available');
     }
 
 }
