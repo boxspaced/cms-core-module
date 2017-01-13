@@ -61,7 +61,9 @@ class Module
 
         $exception = $event->getParam('exception');
 
-        $logger->err($exception ?: 'Error event caught but no exception available');
+        if (null !== $exception) {
+            $logger->err($exception);
+        }
     }
 
 }
