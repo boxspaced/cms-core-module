@@ -193,8 +193,8 @@ class ModulePagePublishForm extends Form
 
             foreach ($blockSequence->blocks as $key => $block) {
 
-                $values['blockSequences'][$blockSequence->name][$key + 1]['id'] = $block->id;
-                $values['blockSequences'][$blockSequence->name][$key + 1]['orderBy'] = $block->orderBy;
+                $values['blockSequences'][$blockSequence->name]['blocks'][$key + 1]['id'] = $block->id;
+                $values['blockSequences'][$blockSequence->name]['blocks'][$key + 1]['orderBy'] = $block->orderBy;
             }
         }
 
