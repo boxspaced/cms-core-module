@@ -4,6 +4,9 @@ namespace Boxspaced\CmsCoreModule\Controller\Plugin;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ViewModel;
 use Boxspaced\CmsAccountModule\Service\AccountService;
+use Boxspaced\CmsDigitalGalleryModule\Controller\DigitalGalleryController;
+use Boxspaced\CmsCourseModule\Controller\CourseController;
+use Boxspaced\CmsWhatsOnModule\Controller\WhatsOnController;
 
 /**
  * @todo move to a Zend\Navigation object
@@ -44,9 +47,10 @@ class AdminNavigationWidget extends AbstractPlugin
             return null;
         }
 
-        $digitalGallery = $this->accountService->isAllowed('digital-gallery', 'manage');
-        $course = $this->accountService->isAllowed('course', 'manage');
-        $whatsOn = $this->accountService->isAllowed('whats-on', 'manage');
+        // @todo should be testing if module is installed
+        $digitalGallery = class_exists(DigitalGalleryController::class) && $this->accountService->isAllowed(DigitalGalleryController::class, 'manage');
+        $course = class_exists(CourseController::class) && $this->accountService->isAllowed(CourseController::class, 'manage');
+        $whatsOn = class_exists(WhatsOnController::class) && $this->accountService->isAllowed(WhatsOnController::class, 'manage');
 
         $allowedModules = [];
 
