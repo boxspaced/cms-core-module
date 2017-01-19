@@ -45,9 +45,9 @@ class ModuleRepository
      */
     public function getByName($name)
     {
-        $conditions = $this->entityManager->createConditions();
-        $conditions->field('name')->eq($name);
-        return $this->entityManager->findOne(Module::class, $conditions);
+        $query = $this->entityManager->createQuery();
+        $query->field('name')->eq($name);
+        return $this->entityManager->findOne(Module::class, $query);
     }
 
     /**
