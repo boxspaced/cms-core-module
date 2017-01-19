@@ -66,7 +66,12 @@ class ModulePageBlockSequence extends AbstractEntity
      */
     public function getBlocks()
     {
-        return $this->get('blocks');
+        return $this->get('blocks')->sort(function(
+            ModulePageBlockSequenceBlock $a,
+            ModulePageBlockSequenceBlock $b
+        ) {
+            return $a->getOrderBy() - $b->getOrderBy();
+        });
     }
 
     /**

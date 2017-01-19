@@ -2,8 +2,6 @@
 namespace Boxspaced\CmsCoreModule;
 
 use Boxspaced\EntityManager\Entity\AbstractEntity;
-use Boxspaced\EntityManager\Mapper\Conditions;
-use Boxspaced\EntityManagerModule\Mapper\ConditionsFactory;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Boxspaced\CmsSlugModule\Model\Route;
 use Boxspaced\CmsBlockModule\Model\Block;
@@ -139,33 +137,9 @@ return [
                     'one_to_many' => [
                         'routes' => [
                             'type' => Route::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'module.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                         'pages' => [
                             'type' => Model\ModulePage::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'parent_module.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                 ],
@@ -194,48 +168,12 @@ return [
                     'one_to_many' => [
                         'free_blocks' => [
                             'type' => Model\ModulePageFreeBlock::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'parent_module_page.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                         'block_sequences' => [
                             'type' => Model\ModulePageBlockSequence::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'parent_module_page.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                         'blocks' => [
                             'type' => Model\ModulePageBlock::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'parent_module_page.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                 ],
@@ -322,24 +260,6 @@ return [
                     'one_to_many' => [
                         'blocks' => [
                             'type' => Model\ModulePageBlockSequenceBlock::class,
-                            'conditions' => [
-                                'factory' => ConditionsFactory::class,
-                                'options' => [
-                                    'constraints' => [
-                                        [
-                                            'field' => 'parent_block_sequence.id',
-                                            'operation' => 'eq',
-                                            'value' => ':id',
-                                        ],
-                                    ],
-                                    'ordering' => [
-                                        [
-                                            'field' => 'order_by',
-                                            'direction' => Conditions::ORDER_ASC,
-                                        ],
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                 ],
