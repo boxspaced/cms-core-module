@@ -1,97 +1,86 @@
-<script type="text/javascript">
-    YAHOO.util.Event.onContentReady('main_menu', function () {
-        var oMenuBar = new YAHOO.widget.MenuBar('main_menu', { lazyload: true });
-        oMenuBar.render();
-    });
-</script>
+<nav class="navbar navbar-default navbar-static-top">
 
-<div id="main_menu" class="yuimenubar">
-    <div class="bd">
-        <ul class="first-of-type">
+    <div class="container-fluid">
 
-            <li class="yuimenubaritem first-of-type">
-                <a class="yuimenubaritemlabel" href="#sub_menu_logo"><em id="boxspaced-label">Boxspaced</em></a>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#admin-navigation-widget" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
 
-                <div id="sub_menu_logo" class="yuimenu">
-                    <div class="bd">
-                        <ul class="first-of-type">
-                            <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="<?php echo $this->url('account'); ?>">Account home</a>
-                            <li class="yuimenuitem"><a class="yuimenuitemlabel" href="<?php echo $this->url('helpdesk'); ?>">Helpdesk</a>
-                            <li class="yuimenuitem"><a class="yuimenuitemlabel" href="<?php echo $this->url('account', ['action' => 'logout']); ?>">Logout</a>
-                        </ul>
-                    </div>
-                </div>
+        <div class="collapse navbar-collapse" id="admin-navigation-widget">
 
-            </li>
+            <ul class="nav navbar-nav">
 
-            <li class="yuimenubaritem">
-                <a class="yuimenubaritemlabel" href="#sub_menu_site">Site</a>
+                <li class="dropdown">
 
-                <div id="sub_menu_site" class="yuimenu">
-                    <div class="bd">
-                        <ul class="first-of-type">
-                            <li class="yuimenuitem first-of-type">
-                                <a class="yuimenuitemlabel" href="<?php echo $this->url('menu'); ?>">Menu content</a>
-                            </li>
-                            <li class="yuimenuitem">
-                                <a class="yuimenuitemlabel" href="<?php echo $this->url('standalone'); ?>">Standalone content</a>
-                            </li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <em id="boxspaced-label">Boxspaced</em>
+                    </a>
 
-                            <?php if ($this->manageableModules) : ?>
-                            <li class="yuimenuitem">
-                                <a class="yuimenuitemlabel" href="#sub_menu_site_modules">Modules</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?php echo $this->url('account'); ?>">Account home</a></li>
+                        <li><a href="<?php echo $this->url('helpdesk'); ?>">Helpdesk</a></li>
+                        <li><a href="<?php echo $this->url('account', ['action' => 'logout']); ?>">Logout</a></li>
+                    </ul>
 
-                                <div id="sub_menu_site_modules" class="yuimenu">
-                                    <div class="bd">
-                                        <ul class="first-of-type">
-                                            <?php $count = 1; foreach ($this->manageableModules as $module) : ?>
-                                            <li class="yuimenuitem<?php if ($count == 1) : ?> first-of-type<?php endif; ?>">
-                                                <a class="yuimenuitemlabel" href="<?php echo $this->url($module, ['action' => 'manage']); ?>"><?php echo $this->escapeHtml($module) ?></a>
-                                            </li>
-                                            <?php $count++; endforeach; ?>
-                                        </ul>
-                                    </div>
-                                </div>
+                </li>
 
-                            </li>
-                            <?php endif; ?>
+                <li class="dropdown">
 
-                            <li class="yuimenuitem">
-                                <a class="yuimenuitemlabel" href="<?php echo $this->url('block'); ?>">Blocks</a>
-                            </li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Site
+                        <b class="caret"></b>
+                    </a>
 
-                            <?php if ($this->allowManageAssets) : ?>
-                            <li class="yuimenuitem">
-                                <a class="yuimenuitemlabel" href="<?php echo $this->url('asset'); ?>">Asset manager</a>
-                            </li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
+                    <ul class="dropdown-menu">
 
-            </li>
+                        <li><a href="<?php echo $this->url('menu'); ?>">Menu content</a></li>
+                        <li><a href="<?php echo $this->url('standalone'); ?>">Standalone content</a></li>
 
-            <li class="yuimenubaritem">
-                <a class="yuimenubaritemlabel" href="#sub_menu_workflow">Workflow</a>
+                        <?php if ($this->manageableModules) : ?>
+                        <li class="dropdown-submenu">
+                            <a href="#">Modules</a>
+                            <ul class="dropdown-menu">
+                                <?php $count = 1; foreach ($this->manageableModules as $module) : ?>
+                                <li><a href="<?php echo $this->url($module, ['action' => 'manage']); ?>"><?php echo $this->escapeHtml($module) ?></a></li>
+                                <?php $count++; endforeach; ?>
+                            </ul>
+                        </li>
+                        <?php endif; ?>
 
-                <div id="sub_menu_workflow" class="yuimenu">
-                    <div class="bd">
-                        <ul class="first-of-type">
-                            <?php if ($this->allowViewAuthoring) : ?>
-                            <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="<?php echo $this->url('workflow', ['action' => 'authoring']); ?>">Authoring</a>
-                            <?php endif; ?>
-                            <?php if ($this->allowViewPublishing) : ?>
-                            <li class="yuimenuitem<?php if (!$this->allowViewAuthoring) : ?> first-of-type<?php endif; ?>"><a class="yuimenuitemlabel" href="<?php echo $this->url('workflow', ['action' => 'publishing']); ?>">Publishing</a>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
+                        <li><a href="<?php echo $this->url('block'); ?>">Blocks</a></li>
 
-            </li>
+                        <?php if ($this->allowManageAssets) : ?>
+                        <li><a href="<?php echo $this->url('asset'); ?>">Asset manager</a></li>
+                        <?php endif; ?>
 
-        </ul>
+                    </ul>
+
+                </li>
+
+                <li class="dropdown">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Workflow
+                        <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <?php if ($this->allowViewAuthoring) : ?>
+                        <li><a href="<?php echo $this->url('workflow', ['action' => 'authoring']); ?>">Authoring</a></li>
+                        <?php endif; ?>
+                        <?php if ($this->allowViewPublishing) : ?>
+                        <li><a href="<?php echo $this->url('workflow', ['action' => 'publishing']); ?>">Publishing</a></li>
+                        <?php endif; ?>
+                    </ul>
+
+                </li>
+
+            </ul>
+        </div>
     </div>
-</div>
-
-
-<div id="top"><!-- Start top area -->
+</nav>
