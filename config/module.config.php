@@ -53,9 +53,6 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
-        'template_map' => [
-            'layout/admin' => __DIR__ . '/../view/boxspaced/cms-core-module/layout/admin.phtml',
-        ],
     ],
     'view_helpers' => [
         'invokables' => [
