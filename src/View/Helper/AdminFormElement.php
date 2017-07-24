@@ -68,7 +68,8 @@ class AdminFormElement extends AbstractHelper
         $html .= $this->generateOpeningElementWrapperTag($element);
 
         if (!$this->isMulti($element) && 'file' !== $element->getAttribute('type')) {
-            $element->setAttribute('class', 'form-control');
+            $current = $element->getAttribute('class');
+            $element->setAttribute('class', implode(' ', [$current, 'form-control']));
         }
 
         $html .= $this->view->formElement($element);
