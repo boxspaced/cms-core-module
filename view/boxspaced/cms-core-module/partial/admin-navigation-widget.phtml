@@ -22,7 +22,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="<?php echo $this->url('account'); ?>">Account home</a></li>
+                        <li><a href="<?php echo $this->url('account'); ?>">Welcome</a></li>
                         <li><a href="<?php echo $this->url('helpdesk'); ?>">Helpdesk</a></li>
                         <li><a href="<?php echo $this->url('account', ['action' => 'logout']); ?>">Logout</a></li>
                     </ul>
@@ -37,11 +37,11 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="<?php echo $this->url('menu'); ?>">Menu content</a></li>
-                        <li><a href="<?php echo $this->url('standalone'); ?>">Standalone content</a></li>
+                        <li><a href="<?php echo $this->url('menu'); ?>">Menu</a></li>
+                        <li><a href="<?php echo $this->url('standalone'); ?>">Standalone</a></li>
                         <li><a href="<?php echo $this->url('block'); ?>">Blocks</a></li>
                         <?php if ($this->allowManageAssets) : ?>
-                        <li><a href="<?php echo $this->url('asset'); ?>">Asset manager</a></li>
+                        <li><a href="<?php echo $this->url('asset'); ?>">Assets</a></li>
                         <?php endif; ?>
                     </ul>
 
@@ -57,7 +57,7 @@
 
                     <ul class="dropdown-menu">
                         <?php $count = 1; foreach ($this->manageableModules as $module) : ?>
-                        <li><a href="<?php echo $this->url($module, ['action' => 'manage']); ?>"><?php echo $this->escapeHtml($module) ?></a></li>
+                        <li><a href="<?php echo $this->url($module, ['action' => 'manage']); ?>"><?php echo $this->escapeHtml(ucfirst(str_replace('-', ' ', $module))) ?></a></li>
                         <?php $count++; endforeach; ?>
                     </ul>
 
