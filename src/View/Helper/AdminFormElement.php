@@ -5,8 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\Filter\StaticFilter;
 use Zend\Form\Element;
 use Zend\Filter\Word\CamelCaseToDash;
-use Zend\Form\View\Helper\FormLabel;
-use Zend\Form\Element\MultiCheckbox;
 
 class AdminFormElement extends AbstractHelper
 {
@@ -21,14 +19,29 @@ class AdminFormElement extends AbstractHelper
             return $this;
         }
 
+        $this->view->formElementErrors()
+            ->setMessageCloseString('</strong></span>')
+            ->setMessageOpenFormat('<span%s><strong>')
+            ->setMessageSeparatorString('</strong><strong>');
+
+        $this->view->formRadio()
+            ->setSeparator('</div><div class="radio">');
+
+        $this->view->formMultiCheckbox()
+            ->setSeparator('</div><div class="checkbox">');
+
         // @todo set ID in form
         $element->setAttribute('id', $this->nameToId($element->getName()));
 
-        if ('hidden' !== $element->getAttribute('type')) {
-            return $this->decorate($element);
+        if ('hidden' === $element->getAttribute('type')) {
+            return $this->decorateNone($element);
         }
 
-        return $this->decorateDefault($element);
+        if ('checkbox' === $element->getAttribute('type')) {
+            return $this->decorateCheckbox($element);
+        }
+
+        return $this->decorate($element);
     }
 
     /**
@@ -50,54 +63,19 @@ class AdminFormElement extends AbstractHelper
      */
     protected function decorate(Element $element)
     {
-        $html = sprintf(
-            '<div id="%s-element" class="form-element">',
-            $element->getAttribute('id')
-        );
+        $html = $this->generateOpeningWrapperTag($element);
+        $html .= $this->generateLabel($element);
+        $html .= $this->generateOpeningElementWrapperTag($element);
 
-        $labelClass = 'lined-up';
-
-        if ($element->hasAttribute('required')) {
-            $labelClass .= ' required';
+        if (!$this->isMulti($element) && 'file' !== $element->getAttribute('type')) {
+            $element->setAttribute('class', 'form-control');
         }
 
-        $element->setLabelAttributes([
-            'class' => $labelClass,
-        ]);
-
-        if ($element->hasAttribute('required')) {
-            $html .= $this->view->formLabel($element, '<img src="/images/required_star.png" class="required-star" alt="Required">', FormLabel::PREPEND);
-        } else {
-            $html .= $this->view->formLabel($element);
-        }
-
-        if (count($element->getMessages()) > 0) {
-
-            $currentClass = $element->getAttribute('class');
-            $element->setAttribute('class', ($currentClass ? $currentClass . ' errored' : 'errored'));
-
-            foreach ($element->getMessages() as $message) {
-                $html .= sprintf('<div class="validation-error line-up">%s</div>', $message);
-            }
-        }
-
-        if ($element instanceof MultiCheckbox) {
-
-            $this->overrideValueOptionLabelAttributes($element, [
-                'class' => '',
-            ]);
-
-            $elementHtml = $this->view->formMultiCheckbox()
-                ->setSeparator('<br>')
-                ->render($element);
-
-        } else {
-            $elementHtml = $this->view->formElement($element);
-        }
+        $html .= $this->view->formElement($element);
 
         // @todo remove and add button with JS
         if (1 === preg_match('/([a-z]+)\-browser/i', $element->getAttribute('class'), $matches)) {
-            $elementHtml .= sprintf(
+            $html .= sprintf(
                 '<input type="button" class="%s-browse-button" value="%s" />',
                 $matches[1],
                 $this->view->translate('Browse server...')
@@ -105,21 +83,13 @@ class AdminFormElement extends AbstractHelper
             );
         }
 
-        $html .= sprintf(
-            '<div class="form-inputs line-up">%s</div>',
-            $elementHtml
-        );
+        $html .= $this->view->formElementErrors($element, [
+            'class' => 'help-block',
+        ]);
 
-        $options = $element->getOptions();
-
-        if (isset($options['description'])) {
-            $html .= sprintf(
-                '<div class="form-tip line-up">%s</div>',
-                $this->view->translate($options['description'])
-            );
-        }
-
-        $html .= '<div class="clear"></div></div>';
+        $html .= $this->generateHelpBlock($element);
+        $html .= $this->generateClosingElementWrapperTag($element);
+        $html .= $this->generateClosingWrapperTag($element);
 
         if (false !== strpos($element->getAttribute('class'), 'wysiwyg')) {
 
@@ -139,51 +109,154 @@ class AdminFormElement extends AbstractHelper
     }
 
     /**
-     * @todo remove this hack when layout revised as only needed to remove the 'lined-up' class from value option labels
      * @param Element $element
-     * @return Element
+     * @return bool
      */
-    protected function overrideValueOptionLabelAttributes(Element $element, array $labelAttributes)
+    protected function isMulti(Element $element)
     {
-        if (!method_exists($element, 'getValueOptions')) {
-            return $element;
-        }
-
-        $valueOptions = [];
-
-        foreach ($element->getValueOptions() as $key => $valueOption) {
-
-            if (is_scalar($valueOption)) {
-                $valueOption = [
-                    'label' => $valueOption,
-                    'value' => $key
-                ];
-            }
-
-            $valueOption['label_attributes'] = (isset($valueOption['label_attributes']))
-                    ? array_merge($valueOption['label_attributes'], $labelAttributes)
-                    : $labelAttributes;
-
-            $valueOptions[] = $valueOption;
-        }
-
-        return $element->setValueOptions($valueOptions);
+        return in_array($element->getAttribute('type'), [
+            'radio',
+            'multi_checkbox',
+        ]);
     }
 
     /**
      * @param Element $element
      * @return string
      */
-    protected function decorateDefault(Element $element)
+    protected function generateOpeningWrapperTag(Element $element)
     {
-        $html = '';
-
-        foreach ($element->getMessages() as $message) {
-            $html .= sprintf('<div class="validation-error line-up">%s</div>', $message);
+        if ('checkbox' === $element->getAttribute('type')) {
+            $class = 'checkbox';
+        } else {
+            $class = 'form-group';
         }
 
-        $html .= $this->view->formElement($element);
+        if (count($element->getMessages()) > 0) {
+            $class .= ' has-error';
+        }
 
+        return sprintf(
+            '<div id="%s-element" class="%s">',
+            $element->getAttribute('id'),
+            $class
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateClosingWrapperTag(Element $element)
+    {
+        return '</div>';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateOpeningElementWrapperTag(Element $element)
+    {
+        if (!$this->isMulti($element)) {
+            return '<div class="col-md-10">';
+        }
+
+        if ('radio' === $element->getAttribute('type')) {
+            return '<div class="radio">';
+        }
+
+        return '<div class="checkbox">';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateClosingElementWrapperTag(Element $element)
+    {
+        return '</div>';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateHelpBlock(Element $element)
+    {
+        $options = $element->getOptions();
+
+        if (empty($options['description'])) {
+            return '';
+        }
+
+        return sprintf(
+            '<span class="help-block">%s</span>',
+            $this->view->translate($options['description'])
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @param bool $withLabelTag
+     * @return string
+     */
+    protected function generateLabel(Element $element, $withLabelTag = true)
+    {
+        $content = $this->view->translate($element->getLabel());
+
+        if ($element->hasAttribute('required')) {
+            $content .= '<img src="/images/required_star.png" class="required-star" alt="Required">';
+        }
+
+        if (!$withLabelTag) {
+            return $content;
+        }
+
+        $element->setLabelAttributes([
+            'class' => 'col-md-2 control-label',
+        ]);
+
+        if ($this->isMulti($element)) {
+            $open = $this->view->formLabel()->openTag();
+        } else {
+            $open = $this->view->formLabel()->openTag($element);
+        }
+
+        $close = $this->view->formLabel()->closeTag();
+
+        return $open . $content . $close;
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function decorateCheckbox(Element $element)
+    {
+        $html = $this->generateOpeningWrapperTag($element);
+        $html .= $this->view->formElementErrors($element, [
+            'class' => 'help-block',
+        ]);
+        $html .= $this->view->formLabel()->openTag($element);
+        $html .= $this->view->formCheckbox($element);
+        $html .= $this->generateLabel($element, false);
+        $html .= $this->view->formLabel()->closeTag();
+        $html .= $this->generateHelpBlock($element);
+        $html .= $this->generateClosingWrapperTag($element);
+        return $html;
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function decorateNone(Element $element)
+    {
+        $html = $this->view->formElementErrors($element, [
+            'class' => 'errors',
+        ]);
+        $html .= $this->view->formElement($element);
         return $html;
     }
 
