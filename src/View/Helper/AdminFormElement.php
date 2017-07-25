@@ -143,10 +143,11 @@ class AdminFormElement extends AbstractHelper
         ]);
 
         return sprintf(
-            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'Now\')">%s</button></span></div>',
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'%s\')">%s</button></span></div>',
             $this->view->formElement($element),
             $element->getAttribute('id'),
-            $this->view->translate('Now')
+            date('Y-m-d'),
+            $this->view->translate('Immediately')
         );
     }
 
@@ -162,10 +163,11 @@ class AdminFormElement extends AbstractHelper
             'data-date-force-parse' => 'false',
             'data-date-start-date' => date('Y-m-d'),
             'data-date-autoclose' => 'true',
+            'data-date-clear-btn' => 'true',
         ]);
 
         return sprintf(
-            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'Never\')">%s</button></span></div>',
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'2038-01-19\')">%s</button></span></div>',
             $this->view->formElement($element),
             $element->getAttribute('id'),
             $this->view->translate('Never')
