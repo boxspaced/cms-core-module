@@ -51,10 +51,19 @@ class AdminFormElement extends AbstractHelper
     {
         $element->setAttribute('id', $this->nameToId($element->getName()));
 
-        if (!$this->isMulti($element) && 'file' !== $element->getAttribute('type')) {
+        if (!$this->isMulti($element) && !in_array($element->getAttribute('type'), [
+            'file',
+            'checkbox',
+        ])) {
 
+            $class = 'form-control';
             $current = $element->getAttribute('class');
-            $element->setAttribute('class', implode(' ', [$current, 'form-control']));
+
+            if ($current) {
+                $class = $current . ' ' . $class;
+            }
+
+            $element->setAttribute('class', $class);
         }
     }
 
@@ -207,11 +216,7 @@ class AdminFormElement extends AbstractHelper
      */
     protected function generateOpeningWrapperTag(Element $element)
     {
-        if ('checkbox' === $element->getAttribute('type')) {
-            $class = 'checkbox';
-        } else {
-            $class = 'form-group';
-        }
+        $class = 'form-group';
 
         if (count($element->getMessages()) > 0) {
             $class .= ' has-error';
@@ -239,15 +244,21 @@ class AdminFormElement extends AbstractHelper
      */
     protected function generateOpeningElementWrapperTag(Element $element)
     {
+        // Single checkbox
+        if ('checkbox' === $element->getAttribute('type')) {
+            return '<div class="col-md-10 col-md-offset-2"><div class="checkbox">';
+        }
+
         if (!$this->isMulti($element)) {
             return '<div class="col-md-10">';
         }
 
         if ('radio' === $element->getAttribute('type')) {
-            return '<div class="radio">';
+            return '<div class="col-md-10 col-md-offset-2"><div class="radio">';
         }
 
-        return '<div class="checkbox">';
+        // Multi checkbox
+        return '<div class="col-md-10 col-md-offset-2"><div class="checkbox">';
     }
 
     /**
@@ -256,7 +267,17 @@ class AdminFormElement extends AbstractHelper
      */
     protected function generateClosingElementWrapperTag(Element $element)
     {
-        return '</div>';
+        // Single checkbox
+        if ('checkbox' === $element->getAttribute('type')) {
+            return '</div></div>';
+        }
+
+        if (!$this->isMulti($element)) {
+            return '</div>';
+        }
+
+        // Radio or multi checkbox
+        return '</div></div>';
     }
 
     /**
@@ -316,14 +337,16 @@ class AdminFormElement extends AbstractHelper
     protected function decorateCheckbox(Element $element)
     {
         $html = $this->generateOpeningWrapperTag($element);
-        $html .= $this->view->formElementErrors($element, [
-            'class' => 'help-block',
-        ]);
+        $html .= $this->generateOpeningElementWrapperTag($element);
         $html .= $this->view->formLabel()->openTag($element);
         $html .= $this->view->formCheckbox($element);
         $html .= $this->generateLabel($element, false);
         $html .= $this->view->formLabel()->closeTag();
+        $html .= $this->view->formElementErrors($element, [
+            'class' => 'help-block',
+        ]);
         $html .= $this->generateHelpBlock($element);
+        $html .= $this->generateClosingElementWrapperTag($element);
         $html .= $this->generateClosingWrapperTag($element);
         return $html;
     }
