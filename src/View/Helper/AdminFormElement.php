@@ -254,11 +254,11 @@ class AdminFormElement extends AbstractHelper
         }
 
         if ('radio' === $element->getAttribute('type')) {
-            return '<div class="col-md-10 col-md-offset-2"><div class="radio">';
+            return '<div class="col-md-10"><div class="radio">';
         }
 
         // Multi checkbox
-        return '<div class="col-md-10 col-md-offset-2"><div class="checkbox">';
+        return '<div class="col-md-10"><div class="checkbox">';
     }
 
     /**
@@ -315,13 +315,16 @@ class AdminFormElement extends AbstractHelper
             return $content;
         }
 
-        $element->setLabelAttributes([
-            'class' => 'col-md-2 control-label',
-        ]);
-
         if ($this->isMulti($element)) {
-            $open = $this->view->formLabel()->openTag();
+
+            $open = '<label class="col-md-2 control-label">';
+
         } else {
+
+            $element->setLabelAttributes([
+                'class' => 'col-md-2 control-label',
+            ]);
+
             $open = $this->view->formLabel()->openTag($element);
         }
 

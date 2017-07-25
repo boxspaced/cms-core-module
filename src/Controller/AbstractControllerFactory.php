@@ -39,4 +39,20 @@ abstract class AbstractControllerFactory
         return $controller;
     }
 
+    /**
+     * @todo review this as it is just a hack to get the nav on every page
+     * @param AbstractActionController $controller
+     * @return AbstractActionController
+     */
+    protected function adminNavigationWidget(AbstractActionController $controller)
+    {
+        $adminNavigation = $controller->adminNavigationWidget();
+
+        if (null !== $adminNavigation) {
+            $controller->layout()->addChild($adminNavigation, 'adminNavigation');
+        }
+
+        return $controller;
+    }
+
 }
