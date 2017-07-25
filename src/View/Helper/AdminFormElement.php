@@ -30,8 +30,7 @@ class AdminFormElement extends AbstractHelper
         $this->view->formMultiCheckbox()
             ->setSeparator('</div><div class="checkbox">');
 
-        // @todo set ID in form
-        $element->setAttribute('id', $this->nameToId($element->getName()));
+        $this->setElementAttributes($element);
 
         if ('hidden' === $element->getAttribute('type')) {
             return $this->decorateNone($element);
@@ -42,6 +41,21 @@ class AdminFormElement extends AbstractHelper
         }
 
         return $this->decorate($element);
+    }
+
+    /**
+     * @param Element $element
+     * @return void
+     */
+    protected function setElementAttributes(Element $element)
+    {
+        $element->setAttribute('id', $this->nameToId($element->getName()));
+
+        if (!$this->isMulti($element) && 'file' !== $element->getAttribute('type')) {
+
+            $current = $element->getAttribute('class');
+            $element->setAttribute('class', implode(' ', [$current, 'form-control']));
+        }
     }
 
     /**
@@ -66,23 +80,7 @@ class AdminFormElement extends AbstractHelper
         $html = $this->generateOpeningWrapperTag($element);
         $html .= $this->generateLabel($element);
         $html .= $this->generateOpeningElementWrapperTag($element);
-
-        if (!$this->isMulti($element) && 'file' !== $element->getAttribute('type')) {
-            $current = $element->getAttribute('class');
-            $element->setAttribute('class', implode(' ', [$current, 'form-control']));
-        }
-
-        $html .= $this->view->formElement($element);
-
-        // @todo remove and add button with JS
-        if (1 === preg_match('/([a-z]+)\-browser/i', $element->getAttribute('class'), $matches)) {
-            $html .= sprintf(
-                '<input type="button" class="%s-browse-button" value="%s" />',
-                $matches[1],
-                $this->view->translate('Browse server...')
-
-            );
-        }
+        $html .= $this->generateInput($element);
 
         $html .= $this->view->formElementErrors($element, [
             'class' => 'help-block',
@@ -107,6 +105,86 @@ class AdminFormElement extends AbstractHelper
         }
 
         return $html;
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateInput(Element $element)
+    {
+        if (false !== stripos($element->getAttribute('class'), 'live-from-datepicker')) {
+            return $this->generateLiveFromInput($element);
+        }
+
+        if (false !== stripos($element->getAttribute('class'), 'expires-end-datepicker')) {
+            return $this->generateExpiresEndInput($element);
+        }
+
+        if (1 === preg_match('/([a-z]+)\-browser/i', $element->getAttribute('class'), $matches)) {
+            return $this->generateBrowseServerInput($element, $matches[1]);
+        }
+
+        return $this->view->formElement($element);
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateLiveFromInput(Element $element)
+    {
+        $element->setAttributes([
+            'data-provide' => 'datepicker',
+            'data-date-format' => 'yyyy-mm-dd',
+            'data-date-today-btn' => 'linked',
+            'data-date-start-date' => date('Y-m-d'),
+            'data-date-autoclose' => 'true',
+        ]);
+
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'Now\')">%s</button></span></div>',
+            $this->view->formElement($element),
+            $element->getAttribute('id'),
+            $this->view->translate('Now')
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateExpiresEndInput(Element $element)
+    {
+        $element->setAttributes([
+            'data-provide' => 'datepicker',
+            'data-date-format' => 'yyyy-mm-dd',
+            'data-date-force-parse' => 'false',
+            'data-date-start-date' => date('Y-m-d'),
+            'data-date-autoclose' => 'true',
+        ]);
+
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'Never\')">%s</button></span></div>',
+            $this->view->formElement($element),
+            $element->getAttribute('id'),
+            $this->view->translate('Never')
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @param string $type
+     * @return string
+     */
+    protected function generateBrowseServerInput(Element $element, $type)
+    {
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default %s-browse-button">%s</button></span></div>',
+            $this->view->formElement($element),
+            $type,
+            $this->view->translate('Browse server...')
+        );
     }
 
     /**
