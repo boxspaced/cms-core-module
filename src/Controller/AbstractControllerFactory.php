@@ -40,17 +40,29 @@ abstract class AbstractControllerFactory
     }
 
     /**
-     * @todo review this as it is just a hack to get the nav on every page
+     * @todo review this as it is just a quick hack to get the nav on every page
      * @param AbstractActionController $controller
+     * @param ContainerInterface $container
      * @return AbstractActionController
      */
-    protected function adminNavigationWidget(AbstractActionController $controller)
+    protected function adminNavigationWidget(
+        AbstractActionController $controller,
+        ContainerInterface $container
+    )
     {
-        $adminNavigation = $controller->adminNavigationWidget();
+        $events = $container->get('EventManager');
 
-        if (null !== $adminNavigation) {
-            $controller->layout()->addChild($adminNavigation, 'adminNavigation');
-        }
+        $events->attach('dispatch', function ($event) use ($controller) {
+
+            $adminNavigation = $controller->adminNavigationWidget();
+
+            if (null !== $adminNavigation) {
+                $controller->layout()->addChild($adminNavigation, 'adminNavigation');
+            }
+
+        }, 100);
+
+        $controller->setEventManager($events);
 
         return $controller;
     }
