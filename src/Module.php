@@ -33,14 +33,9 @@ class Module
             [$this, 'error']
         );
 
-        $eventManager->attach(
-            MvcEvent::EVENT_RENDER_ERROR,
-            [$this, 'error']
-        );
-
         $sharedEventManager->attach(
             AbstractActionController::class,
-            MvcEvent::EVENT_DISPATCH,
+            MvcEvent::EVENT_RENDER,
             function (MvcEvent $event) {
 
                 $controller = $event->getTarget();
@@ -51,6 +46,11 @@ class Module
                 }
             },
             100
+        );
+
+        $eventManager->attach(
+            MvcEvent::EVENT_RENDER_ERROR,
+            [$this, 'error']
         );
 
         $this->initSearch();
