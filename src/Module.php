@@ -1,16 +1,15 @@
 <?php
 namespace Boxspaced\CmsCoreModule;
 
+use Zend\Log\Logger;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend_Search_Lucene_Search_QueryParser as SearchQueryParser;
 use Zend_Search_Lucene_Analysis_Analyzer as SearchAnalyzer;
 use Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive as SearchAnalyzerCaseInsensitive;
-use Zend\Log\Logger;
 
 class Module
 {
-
-    const VERSION = '1.0.1';
 
     /**
      * @return array
@@ -27,14 +26,31 @@ class Module
     public function onBootstrap(MvcEvent $event)
     {
         $eventManager = $event->getApplication()->getEventManager();
+        $sharedEventManager = $eventManager->getSharedManager();
 
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH_ERROR,
             [$this, 'error']
         );
+
         $eventManager->attach(
             MvcEvent::EVENT_RENDER_ERROR,
             [$this, 'error']
+        );
+
+        $sharedEventManager->attach(
+            AbstractActionController::class,
+            MvcEvent::EVENT_DISPATCH,
+            function (MvcEvent $event) {
+
+                $controller = $event->getTarget();
+                $adminNavigation = $controller->adminNavigationWidget();
+
+                if (null !== $adminNavigation) {
+                    $controller->layout()->addChild($adminNavigation, 'adminNavigation');
+                }
+            },
+            100
         );
 
         $this->initSearch();
