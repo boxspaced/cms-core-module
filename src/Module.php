@@ -28,14 +28,9 @@ class Module
         $eventManager = $event->getApplication()->getEventManager();
         $sharedEventManager = $eventManager->getSharedManager();
 
-        $eventManager->attach(
-            MvcEvent::EVENT_DISPATCH_ERROR,
-            [$this, 'error']
-        );
-
         $sharedEventManager->attach(
             AbstractActionController::class,
-            MvcEvent::EVENT_RENDER,
+            MvcEvent::EVENT_DISPATCH,
             function (MvcEvent $event) {
 
                 $controller = $event->getTarget();
@@ -46,6 +41,11 @@ class Module
                 }
             },
             100
+        );
+
+        $eventManager->attach(
+            MvcEvent::EVENT_DISPATCH_ERROR,
+            [$this, 'error']
         );
 
         $eventManager->attach(
