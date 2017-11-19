@@ -1,7 +1,7 @@
-This page:
-
-<?php if ($this->allowPublish) : ?>
-<a href="<?php echo $this->url($this->moduleName, ['action' => 'publish', 'id' => $this->id]); ?>" title="Edit <?php echo $this->escapeHtmlAttr($this->moduleName) ?> <?php echo $this->escapeHtmlAttr($this->pageName) ?> publishing"><img src="/images/icons/globe.png" alt="Globe icon"></a>&nbsp;
-<?php else : ?>
-<img src="/images/icons/globe_disabled.png" alt="Globe icon disabled" title="Access denied or action not possible for this page">&nbsp;
-<?php endif; ?>
+<div>
+    <?php if ($this->allowPublish) : ?>
+    <a href="<?php echo $this->url($this->moduleName, ['action' => 'publish', 'id' => $this->id]); ?>" title="Edit <?php echo $this->escapeHtmlAttr($this->moduleName) ?> <?php echo $this->escapeHtmlAttr($this->pageName) ?> publishing"><img src="/images/icons/globe.png" alt="Globe icon"></a>&nbsp;
+    <?php else : ?>
+    <img src="/images/icons/globe_disabled.png" alt="Globe icon disabled" title="Access denied or action not possible for this page">&nbsp;
+    <?php endif; ?>
+</div>

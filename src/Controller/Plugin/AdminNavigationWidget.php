@@ -38,10 +38,9 @@ class AdminNavigationWidget extends AbstractPlugin
     }
 
     /**
-     * @param bool $new
      * @return ViewModel|null
      */
-    public function __invoke($new = false)
+    public function __invoke()
     {
         if (null === $this->accountService->getIdentity()) {
             return null;
@@ -64,11 +63,6 @@ class AdminNavigationWidget extends AbstractPlugin
             $allowedModules[] = 'whats-on';
         }
 
-        $partial = 'admin-navigation-widget';
-        if ($new) {
-            $partial = 'new-admin-navigation-widget';
-        }
-
         $viewModel = new ViewModel([
             'manageableModules' => $allowedModules,
             'allowViewAuthoring' => $this->accountService->isAllowed('workflow', 'authoring'),
@@ -76,7 +70,7 @@ class AdminNavigationWidget extends AbstractPlugin
             'allowManageAssets' => $this->accountService->isAllowed('asset', 'index'),
         ]);
 
-        return $viewModel->setTemplate('boxspaced/cms-core-module/partial/' . $partial . '.phtml');
+        return $viewModel->setTemplate('boxspaced/cms-core-module/partial/admin-navigation-widget.phtml');
     }
 
 }

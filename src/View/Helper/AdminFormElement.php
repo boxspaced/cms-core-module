@@ -5,8 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\Filter\StaticFilter;
 use Zend\Form\Element;
 use Zend\Filter\Word\CamelCaseToDash;
-use Zend\Form\View\Helper\FormLabel;
-use Zend\Form\Element\MultiCheckbox;
 
 class AdminFormElement extends AbstractHelper
 {
@@ -21,14 +19,52 @@ class AdminFormElement extends AbstractHelper
             return $this;
         }
 
-        // @todo set ID in form
-        $element->setAttribute('id', $this->nameToId($element->getName()));
+        $this->view->formElementErrors()
+            ->setMessageCloseString('</strong></span>')
+            ->setMessageOpenFormat('<span%s><strong>')
+            ->setMessageSeparatorString('</strong><strong>');
 
-        if ('hidden' !== $element->getAttribute('type')) {
-            return $this->decorate($element);
+        $this->view->formRadio()
+            ->setSeparator('</div><div class="radio">');
+
+        $this->view->formMultiCheckbox()
+            ->setSeparator('</div><div class="checkbox">');
+
+        $this->setElementAttributes($element);
+
+        if ('hidden' === $element->getAttribute('type')) {
+            return $this->decorateNone($element);
         }
 
-        return $this->decorateDefault($element);
+        if ('checkbox' === $element->getAttribute('type')) {
+            return $this->decorateCheckbox($element);
+        }
+
+        return $this->decorate($element);
+    }
+
+    /**
+     * @param Element $element
+     * @return void
+     */
+    protected function setElementAttributes(Element $element)
+    {
+        $element->setAttribute('id', $this->nameToId($element->getName()));
+
+        if (!$this->isMulti($element) && !in_array($element->getAttribute('type'), [
+            'file',
+            'checkbox',
+        ])) {
+
+            $class = 'form-control';
+            $current = $element->getAttribute('class');
+
+            if ($current) {
+                $class = $current . ' ' . $class;
+            }
+
+            $element->setAttribute('class', $class);
+        }
     }
 
     /**
@@ -50,76 +86,18 @@ class AdminFormElement extends AbstractHelper
      */
     protected function decorate(Element $element)
     {
-        $html = sprintf(
-            '<div id="%s-element" class="form-element">',
-            $element->getAttribute('id')
-        );
+        $html = $this->generateOpeningWrapperTag($element);
+        $html .= $this->generateLabel($element);
+        $html .= $this->generateOpeningElementWrapperTag($element);
+        $html .= $this->generateInput($element);
 
-        $labelClass = 'lined-up';
-
-        if ($element->hasAttribute('required')) {
-            $labelClass .= ' required';
-        }
-
-        $element->setLabelAttributes([
-            'class' => $labelClass,
+        $html .= $this->view->formElementErrors($element, [
+            'class' => 'help-block',
         ]);
 
-        if ($element->hasAttribute('required')) {
-            $html .= $this->view->formLabel($element, '<img src="/images/required_star.png" class="required-star" alt="Required">', FormLabel::PREPEND);
-        } else {
-            $html .= $this->view->formLabel($element);
-        }
-
-        if (count($element->getMessages()) > 0) {
-
-            $currentClass = $element->getAttribute('class');
-            $element->setAttribute('class', ($currentClass ? $currentClass . ' errored' : 'errored'));
-
-            foreach ($element->getMessages() as $message) {
-                $html .= sprintf('<div class="validation-error line-up">%s</div>', $message);
-            }
-        }
-
-        if ($element instanceof MultiCheckbox) {
-
-            $this->overrideValueOptionLabelAttributes($element, [
-                'class' => '',
-            ]);
-
-            $elementHtml = $this->view->formMultiCheckbox()
-                ->setSeparator('<br>')
-                ->render($element);
-
-        } else {
-            $elementHtml = $this->view->formElement($element);
-        }
-
-        // @todo remove and add button with JS
-        if (1 === preg_match('/([a-z]+)\-browser/i', $element->getAttribute('class'), $matches)) {
-            $elementHtml .= sprintf(
-                '<input type="button" class="%s-browse-button" value="%s" />',
-                $matches[1],
-                $this->view->translate('Browse server...')
-
-            );
-        }
-
-        $html .= sprintf(
-            '<div class="form-inputs line-up">%s</div>',
-            $elementHtml
-        );
-
-        $options = $element->getOptions();
-
-        if (isset($options['description'])) {
-            $html .= sprintf(
-                '<div class="form-tip line-up">%s</div>',
-                $this->view->translate($options['description'])
-            );
-        }
-
-        $html .= '<div class="clear"></div></div>';
+        $html .= $this->generateHelpBlock($element);
+        $html .= $this->generateClosingElementWrapperTag($element);
+        $html .= $this->generateClosingWrapperTag($element);
 
         if (false !== strpos($element->getAttribute('class'), 'wysiwyg')) {
 
@@ -139,51 +117,253 @@ class AdminFormElement extends AbstractHelper
     }
 
     /**
-     * @todo remove this hack when layout revised as only needed to remove the 'lined-up' class from value option labels
      * @param Element $element
-     * @return Element
+     * @return string
      */
-    protected function overrideValueOptionLabelAttributes(Element $element, array $labelAttributes)
+    protected function generateInput(Element $element)
     {
-        if (!method_exists($element, 'getValueOptions')) {
-            return $element;
+        if (false !== stripos($element->getAttribute('class'), 'live-from-datepicker')) {
+            return $this->generateLiveFromInput($element);
         }
 
-        $valueOptions = [];
-
-        foreach ($element->getValueOptions() as $key => $valueOption) {
-
-            if (is_scalar($valueOption)) {
-                $valueOption = [
-                    'label' => $valueOption,
-                    'value' => $key
-                ];
-            }
-
-            $valueOption['label_attributes'] = (isset($valueOption['label_attributes']))
-                    ? array_merge($valueOption['label_attributes'], $labelAttributes)
-                    : $labelAttributes;
-
-            $valueOptions[] = $valueOption;
+        if (false !== stripos($element->getAttribute('class'), 'expires-end-datepicker')) {
+            return $this->generateExpiresEndInput($element);
         }
 
-        return $element->setValueOptions($valueOptions);
+        if (1 === preg_match('/([a-z]+)\-browser/i', $element->getAttribute('class'), $matches)) {
+            return $this->generateBrowseServerInput($element, $matches[1]);
+        }
+
+        return $this->view->formElement($element);
     }
 
     /**
      * @param Element $element
      * @return string
      */
-    protected function decorateDefault(Element $element)
+    protected function generateLiveFromInput(Element $element)
     {
-        $html = '';
+        $element->setAttributes([
+            'data-provide' => 'datepicker',
+            'data-date-format' => 'yyyy-mm-dd',
+            'data-date-today-btn' => 'linked',
+            'data-date-start-date' => date('Y-m-d'),
+            'data-date-autoclose' => 'true',
+        ]);
 
-        foreach ($element->getMessages() as $message) {
-            $html .= sprintf('<div class="validation-error line-up">%s</div>', $message);
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'%s\')">%s</button></span></div>',
+            $this->view->formElement($element),
+            $element->getAttribute('id'),
+            date('Y-m-d'),
+            $this->view->translate('Immediately')
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateExpiresEndInput(Element $element)
+    {
+        $element->setAttributes([
+            'data-provide' => 'datepicker',
+            'data-date-format' => 'yyyy-mm-dd',
+            'data-date-force-parse' => 'false',
+            'data-date-start-date' => date('Y-m-d'),
+            'data-date-autoclose' => 'true',
+            'data-date-clear-btn' => 'true',
+        ]);
+
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default" onclick="$(\'#%s\').val(\'2038-01-19\')">%s</button></span></div>',
+            $this->view->formElement($element),
+            $element->getAttribute('id'),
+            $this->view->translate('Never')
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @param string $type
+     * @return string
+     */
+    protected function generateBrowseServerInput(Element $element, $type)
+    {
+        return sprintf(
+            '<div class="input-group">%s<span class="input-group-btn"><button type="button" class="btn btn-default %s-browse-button">%s</button></span></div>',
+            $this->view->formElement($element),
+            $type,
+            $this->view->translate('Browse server...')
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @return bool
+     */
+    protected function isMulti(Element $element)
+    {
+        return in_array($element->getAttribute('type'), [
+            'radio',
+            'multi_checkbox',
+        ]);
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateOpeningWrapperTag(Element $element)
+    {
+        $class = 'form-group';
+
+        if (count($element->getMessages()) > 0) {
+            $class .= ' has-error';
         }
 
-        $html .= $this->view->formElement($element);
+        return sprintf(
+            '<div id="%s-element" class="%s">',
+            $element->getAttribute('id'),
+            $class
+        );
+    }
 
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateClosingWrapperTag(Element $element)
+    {
+        return '</div>';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateOpeningElementWrapperTag(Element $element)
+    {
+        // Single checkbox
+        if ('checkbox' === $element->getAttribute('type')) {
+            return '<div class="col-md-10 col-md-offset-2"><div class="checkbox">';
+        }
+
+        if (!$this->isMulti($element)) {
+            return '<div class="col-md-10">';
+        }
+
+        if ('radio' === $element->getAttribute('type')) {
+            return '<div class="col-md-10"><div class="radio">';
+        }
+
+        // Multi checkbox
+        return '<div class="col-md-10"><div class="checkbox">';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateClosingElementWrapperTag(Element $element)
+    {
+        // Single checkbox
+        if ('checkbox' === $element->getAttribute('type')) {
+            return '</div></div>';
+        }
+
+        if (!$this->isMulti($element)) {
+            return '</div>';
+        }
+
+        // Radio or multi checkbox
+        return '</div></div>';
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function generateHelpBlock(Element $element)
+    {
+        $options = $element->getOptions();
+
+        if (empty($options['description'])) {
+            return '';
+        }
+
+        return sprintf(
+            '<span class="help-block">%s</span>',
+            $this->view->translate($options['description'])
+        );
+    }
+
+    /**
+     * @param Element $element
+     * @param bool $withLabelTag
+     * @return string
+     */
+    protected function generateLabel(Element $element, $withLabelTag = true)
+    {
+        $content = $this->view->translate($element->getLabel());
+
+        if ($element->hasAttribute('required')) {
+            $content .= '<img src="/images/required_star.png" class="required-star" alt="Required">';
+        }
+
+        if (!$withLabelTag) {
+            return $content;
+        }
+
+        if ($this->isMulti($element)) {
+
+            $open = '<label class="col-md-2 control-label">';
+
+        } else {
+
+            $element->setLabelAttributes([
+                'class' => 'col-md-2 control-label',
+            ]);
+
+            $open = $this->view->formLabel()->openTag($element);
+        }
+
+        $close = $this->view->formLabel()->closeTag();
+
+        return $open . $content . $close;
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function decorateCheckbox(Element $element)
+    {
+        $html = $this->generateOpeningWrapperTag($element);
+        $html .= $this->generateOpeningElementWrapperTag($element);
+        $html .= $this->view->formLabel()->openTag($element);
+        $html .= $this->view->formCheckbox($element);
+        $html .= $this->generateLabel($element, false);
+        $html .= $this->view->formLabel()->closeTag();
+        $html .= $this->view->formElementErrors($element, [
+            'class' => 'help-block',
+        ]);
+        $html .= $this->generateHelpBlock($element);
+        $html .= $this->generateClosingElementWrapperTag($element);
+        $html .= $this->generateClosingWrapperTag($element);
+        return $html;
+    }
+
+    /**
+     * @param Element $element
+     * @return string
+     */
+    protected function decorateNone(Element $element)
+    {
+        $html = $this->view->formElementErrors($element, [
+            'class' => 'errors',
+        ]);
+        $html .= $this->view->formElement($element);
         return $html;
     }
 
