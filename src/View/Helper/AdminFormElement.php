@@ -147,7 +147,7 @@ class AdminFormElement extends AbstractHelper
             'data-provide' => 'datepicker',
             'data-date-format' => 'yyyy-mm-dd',
             'data-date-today-btn' => 'linked',
-            'data-date-start-date' => date('Y-m-d'),
+            //'data-date-start-date' => date('Y-m-d'),
             'data-date-autoclose' => 'true',
         ]);
 
@@ -170,7 +170,7 @@ class AdminFormElement extends AbstractHelper
             'data-provide' => 'datepicker',
             'data-date-format' => 'yyyy-mm-dd',
             'data-date-force-parse' => 'false',
-            'data-date-start-date' => date('Y-m-d'),
+            //'data-date-start-date' => date('Y-m-d'),
             'data-date-autoclose' => 'true',
             'data-date-clear-btn' => 'true',
         ]);
